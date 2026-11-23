@@ -1,0 +1,31 @@
+﻿# Entornos virtuales y caché de Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Credenciales y configuración local
+.env
+*.key
+config.local.json
+
+# Bases de datos y logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Archivos multimedia generados y temporales (videos, audios, renders)
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.mp3
+*.wav
+*.aac
+*.srt
+outputs/
+exports/
+renders/
+temp/
+media_cache/

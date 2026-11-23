@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d11">
+  <title>AI Video Studio Local</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <link rel="stylesheet" href="/static/app-overrides.css">
+  <link rel="stylesheet" href="/static/media.css">
+  <script>window.LOCAL_APP_TOKEN = "__LOCAL_APP_TOKEN__";</script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-lockup">
+        <div class="brand-mark">K</div>
+        <div><strong>KATIRE</strong><small>AUTOEDIT STUDIO</small></div>
+        <button class="icon-button sidebar-collapse" title="Contraer menú" aria-label="Contraer menú">‹</button>
+      </div>
+
+      <button class="project-switcher" id="project-switcher">
+        <span class="tiny-label">PROYECTO ACTUAL</span>
+        <span class="project-switcher-title"><span class="folder-icon">▱</span><span id="sidebar-project-title">youtube stickman</span></span>
+        <span class="chevron">⌄</span>
+      </button>
+
+      <div class="nav-label">ESPACIO DE TRABAJO</div>
+      <nav class="main-nav" aria-label="Espacio de trabajo">
+        <button class="nav-item" data-view="home"><span class="nav-icon">⌂</span>Inicio</button>
+        <button class="nav-item" data-view="projects"><span class="nav-icon">▱</span>Proyectos</button>
+      </nav>
+
+      <div class="nav-label section-label">PRODUCCIÓN</div>
+      <nav class="step-nav" aria-label="Pasos del proyecto">
+        <button class="nav-item" data-view="audio"><span class="nav-icon">◖</span><span class="step-number">1.</span>Audio<span class="nav-check done">●</span></button>
+        <button class="nav-item" data-view="script"><span class="nav-icon">✎</span><span class="step-number">2.</span>Guion<span class="nav-check done">●</span></button>
+        <button class="nav-item" data-view="prompts"><span class="nav-icon">✧</span><span class="step-number">3.</span>Prompts</button>
+        <button class="nav-item" data-view="resources"><span class="nav-icon">▧</span><span class="step-number">4.</span>Recursos<span class="nav-count" id="resource-count">0</span></button>
+        <button class="nav-item" data-view="analysis"><span class="nav-icon">◌</span><span class="step-number">5.</span>Análisis IA</button>
+        <button class="nav-item" data-view="scenes"><span class="nav-icon">☷</span><span class="step-number">6.</span>Escenas</button>
+        <button class="nav-item active" data-view="timeline"><span class="nav-icon">☷</span><span class="step-number">7.</span>Línea de tiempo<span class="nav-check live">●</span></button>
+        <button class="nav-item" data-view="review"><span class="nav-icon">⬡</span><span class="step-number">8.</span>Revisión<span class="nav-count" id="note-nav-count">1</span></button>
+        <button class="nav-item" data-view="export"><span class="nav-icon">⇧</span><span class="step-number">9.</span>Exportar</button>
+      </nav>
+
+      <div class="nav-label section-label">ESTUDIO</div>
+      <nav class="main-nav">
+        <button class="nav-item" data-view="styles"><span class="nav-icon">◉</span>Estilos</button>
+        <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span>Ajustes<span class="settings-dot" id="settings-status-dot"></span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="local-status"><span class="pulse-dot"></span><span><strong>Procesamiento local</strong><small>Tu proyecto se queda en este PC</small></span></div>
+        <button class="quit-button"><span>⏻</span> Cerrar estudio</button>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <header class="topbar">
+        <div class="topbar-project"><strong id="top-project-title">youtube stickman</strong><span class="status-pill"><span class="pulse-dot"></span>LISTO</span></div>
+        <div class="topbar-metrics">
+          <div class="metric"><span>ESCENAS</span><strong id="metric-scenes">30</strong></div>
+          <div class="metric"><span>IMÁGENES</span><strong id="metric-images">0/30</strong></div>
+          <div class="metric"><span>DURACIÓN</span><strong id="metric-duration">1:19</strong></div>
+          <div class="metric token-metric"><span>LLM</span><strong id="metric-tokens">0 tok</strong></div>
+          <div class="metric"><span>COSTO USD</span><strong id="metric-cost">$0.00</strong></div>
+          <div class="local-pill"><span class="pulse-dot"></span>PROCESAMIENTO LOCAL</div>
+        </div>
+      </header>
+
+      <section class="view editor-view" id="editor-view">
+        <div class="editor-main-column">
+          <div class="preview-heading">
+            <div class="preview-heading-left"><span class="view-title">Línea de tiempo</span></div>
+            <div class="preview-heading-right"><button class="primary-button" id="generate-pending-voices">Generar todas las voces pendientes</button><span class="muted-label">GUARDADO LOCAL</span><span class="saved-dot">●</span></div>
+          </div>
+
+          <div class="preview-wrap">
+            <div class="video-stage" id="video-stage">
+              <div class="stage-background"></div>
+              <div class="stage-vignette"></div>
+              <div class="stage-art-frame">
+                <svg class="story-illustration" viewBox="0 0 420 620" role="img" aria-label="Escena ilustrada de una persona en un camino bajo la lluvia">
+                  <defs>
+                    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f5d28e"/><stop offset="1" stop-color="#f8e2a9"/></linearGradient>
+                    <linearGradient id="ground" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d5b378"/><stop offset="1" stop-color="#b59161"/></linearGradient>
+                    <filter id="shadow"><feGaussianBlur stdDeviation="7"/></filter>
+                  </defs>
+                  <rect width="420" height="620" fill="url(#sky)"/>
+                  <circle cx="333" cy="91" r="34" fill="#f5bd59" opacity=".55"/>
+                  <path d="M0 480 Q84 460 165 479T420 469V620H0Z" fill="url(#ground)"/>
+                  <path d="M0 512 Q102 495 182 515T420 507M0 561Q114 548 214 565T420 552" fill="none" stroke="#98784d" stroke-width="3" opacity=".55"/>
+                  <g fill="#7a6755" stroke="#4d453e" stroke-width="3" stroke-linejoin="round">
+                    <path d="M268 151h93v24h-93z"/><path d="M279 175h72v24h-72z"/><path d="M284 199h63v282h-63z"/><path d="M276 481h80v20h-80z"/>
+                    <path d="M271 145q5-24 42-30 36 6 45 30z"/><path d="M278 121q-14-27 13-43 3-23 30-18 19-8 34 11 20 14 7 39-16-6-25-19-10 17-27 18-16 17-32 12z" fill="#897362"/>
+                    <path d="M293 480v-269m17 269V208m17 272V208m17 272V208" fill="none" stroke="#c0a27b" stroke-width="3" opacity=".7"/>
+                  </g>
+                  <g stroke="#3a3430" stroke-linecap="round" stroke-linejoin="round">
+                    <ellipse cx="150" cy="563" rx="71" ry="14" fill="#806541" opacity=".36" filter="url(#shadow)" stroke="none"/>
+                    <path d="M145 401q-8 44-8 89l-25 68h38l25-66 14-67" fill="#d7c4a3" stroke-width="7"/>
+                    <path d="M174 409q18 39 22 76l-9 71h35l8-77q-4-45-29-83" fill="#e2d0b0" stroke-width="7"/>
+                    <path d="M117 557l-21 14q-8 9 2 14h55l3-9-13-19m70 0 21 14q8 10-4 14h-46l-2-8 13-20" fill="#433d36" stroke-width="5"/>
+                    <path d="M129 314q-24 4-33 42l-19 40q-5 14 8 18 11 3 18-13l23-28 14 50q28 20 66 0l9-59 23 21q14 8 20-3 5-10-6-20l-40-45q-30-14-83-3z" fill="#916744" stroke-width="7"/>
+                    <path d="M145 390q29 18 61 0l-9 61q-25 22-50 2z" fill="#eee0bf" stroke-width="6"/>
+                    <path d="M145 315q5-17 24-18 28-1 35 21l-5 39q-7 27-27 29-20-6-27-28l-7-25z" fill="#f4e8d2" stroke-width="6"/>
+                    <path d="M132 323q-7-27 9-41l2-20q18 3 24-10 18 7 32 0 2 22 16 34l-7 36q-9-21-23-29-20 13-47 9z" fill="#bf8b30" stroke-width="7"/>
+                    <path d="M145 267q12-29 36-24 22 0 35 25m-81-7q21 10 61-1" fill="none" stroke="#f0c766" stroke-width="7"/>
+                    <path d="M157 333q8 7 15 0m10-1q8 7 15 0m-25 18q10 8 21-2" fill="none" stroke-width="5"/>
+                    <path d="M167 346l-5 10 9 2" fill="none" stroke-width="3"/>
+                    <path d="M95 384l-21 22m169-12 20 7" fill="none" stroke-width="6"/>
+                  </g>
+                  <g fill="none" stroke="#564b40" stroke-width="3" opacity=".65">
+                    <path d="M0 125q15-24 45-17 10-29 43-18 20-38 58-17 25-9 34 18 35-5 46 26 16 11 17 25H0z" fill="#8e8072"/>
+                    <path d="M19 156l-12 38m46-33-15 45m76-51-14 44m-54-3-16 45m121-76-14 43m-63 36-15 42m103-65-18 47" stroke-width="5"/>
+                  </g>
+                  <g fill="#6d5d48" opacity=".8"><path d="M46 503l9-16 3 16 10-10-5 16z"/><path d="M240 529l9-18 4 18 10-8-3 15z"/><path d="M28 583l9-17 5 18 8-9-1 13z"/><path d="M334 550l11-19 4 17 10-12-3 17z"/></g>
+                </svg>
+                <div class="scene-overlay"><span id="stage-scene-label">ESCENA 06</span><span class="scene-index-pill" id="stage-scene-index">#006</span></div>
+              </div>
+              <div class="stage-fade"></div>
+              <div class="stage-top-right"><span class="ai-match"><span>✧</span> Match <b id="stage-match">91%</b></span></div>
+            </div>
+            <div class="player-controls">
+              <button class="player-icon" id="previous-scene" title="Escena anterior">|◀</button>
+              <button class="skip-button" id="back-five">−5s</button>
+              <button class="play-button" id="play-button" aria-label="Reproducir">▶</button>
+              <button class="skip-button" id="forward-five">+5s</button>
+              <button class="player-icon" id="next-scene" title="Escena siguiente">▶|</button>
+              <span class="player-time"><strong id="current-time">00:18.07</strong><span>/</span><span id="total-time">01:19.07</span></span>
+              <span class="player-spacer"></span>
+              <button class="player-icon" id="volume-button" title="Volumen">◖</button>
+              <button class="player-icon" id="fullscreen-button" title="Vista amplia">⛶</button>
+            </div>
+          </div>
+
+          <div class="timeline-panel">
+            <div class="timeline-toolbar">
+              <div class="toolbar-group">
+                <button class="toolbar-action" id="split-scene">⌁ <span>Dividir</span></button>
+                <button class="toolbar-action" id="delete-scene">⌫ <span>Quitar</span></button>
+                <button class="toolbar-action" id="add-scene">＋ <span>Añadir escena</span></button>
+                <span class="toolbar-divider"></span>
+                <button class="toolbar-action" data-view="audio">◖ <span>Audio</span></button>
+                <button class="toolbar-action" data-view="help">ⓘ <span>Ayuda</span></button>
+              </div>
+              <div class="timeline-zoom"><span class="cursor-time" id="cursor-time">00:18.07</span><button class="tiny-tool" id="zoom-out">−</button><input type="range" min="60" max="140" value="100" id="zoom-range"><button class="tiny-tool" id="zoom-in">＋</button><button class="fit-button" id="fit-timeline">Ajustar</button></div>
+            </div>
+            <div class="timeline-scroller" id="timeline-scroller">
+              <div class="timeline-content" id="timeline-content">
+                <div class="timeline-ruler-row"><div class="track-label-spacer"></div><div class="timeline-ruler" id="timeline-ruler" aria-hidden="true"></div></div>
+                <div class="track-row video-track-row"><div class="track-name"><span class="track-kind">▰</span><span>Video</span></div><div class="video-track" id="video-track"></div></div>
+                <div class="track-row audio-track-row"><div class="track-name"><span class="track-kind sound">◖</span><span>Audio</span></div><div class="audio-track"><div class="waveform" id="waveform"></div><span class="audio-track-name" id="timeline-audio-label">Sin narración</span><audio id="timeline-audio" preload="none" hidden></audio></div></div>
+                <div class="playhead" id="playhead"><span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="inspector">
+          <div class="inspector-tabs"><button class="inspector-tab active" data-inspector-tab="scene">☷ &nbsp; Escena</button><button class="inspector-tab" data-inspector-tab="library">▧ &nbsp; Biblioteca</button></div>
+          <div class="inspector-scroll" id="scene-inspector">
+            <div class="inspector-heading-row"><div><span class="eyebrow" id="inspector-scene-label">ESCENA 06</span><span class="ai-badge">✧ IA</span></div><span class="match-label">Match <b id="inspector-match">91%</b></span></div>
+            <div class="time-range"><strong id="inspector-time-range">00:15.00 → 00:18.37</strong><span id="inspector-duration">3.37s</span></div>
+            <label class="field-label" for="narration-input">Narración</label>
+            <textarea id="narration-input" class="narration-input" rows="3"></textarea>
+            <div class="metadata-block">
+              <span class="field-label">Interpretación de la IA</span>
+              <div class="metadata-row"><span>Sujeto</span><strong id="meta-subject">millones de personas</strong></div>
+              <div class="metadata-row"><span>Lugar</span><strong id="meta-place">Plassey</strong></div>
+              <div class="metadata-row"><span>Época</span><strong id="meta-era">1757</strong></div>
+              <div class="metadata-row keyword-row"><span>Keywords</span><div class="keywords" id="meta-keywords"></div></div>
+            </div>
+            <div class="asset-block">
+              <div class="asset-title"><span>Recurso actual</span><span class="asset-dot"></span></div>
+              <div class="current-asset"><div class="asset-thumb"><span>✧</span></div><div><strong id="asset-name">Ilustración de escena</strong><small id="asset-caption">Cómic web · recurso local</small></div></div>
+              <div class="asset-buttons"><button class="secondary-button" id="change-resource">▧ &nbsp; Cambiar recurso</button><button class="secondary-button" id="upload-resource">⇧ &nbsp; Subir archivo</button><input type="file" hidden id="image-file" accept="image/png,image/jpeg,image/webp"></div>
+              <div class="asset-buttons compact"><button class="secondary-button" id="regenerate-image">⟳ &nbsp; Regenerar</button><button class="secondary-button" id="lock-scene">♙ &nbsp; Bloquear</button><button class="secondary-button" id="merge-scene">⤢ &nbsp; Fusionar</button></div>
+              <div class="prompt-block image-correction-block"><label class="field-label" for="image-correction">Instrucciones de corrección</label><textarea id="image-correction" rows="2" placeholder="Ej.: cambia la expresión a enojado"></textarea></div>
+              <button class="text-button" id="regenerate-from-here">↻ &nbsp; Regenerar desde aquí</button>
+            </div>
+            <div class="prompt-block"><label class="field-label" for="visual-prompt">Prompt visual</label><textarea id="visual-prompt" rows="3"></textarea><button class="text-button" id="save-scene">Guardar cambios de escena</button></div>
+            <div class="alternatives-block"><div class="asset-title"><span>Alternativas de IA</span><button class="mini-link" data-view="settings">Conectar API</button></div><div class="alternative-cards"><button class="alternative-card selected"><span class="alt-art alt-one">#006</span><span class="alt-score">91%</span></button><button class="alternative-card"><span class="alt-art alt-two">#018</span><span class="alt-score">87%</span></button></div></div>
+          </div>
+          <div class="inspector-scroll hidden" id="library-inspector"><div class="library-head"><strong>Biblioteca de recursos</strong><button class="secondary-button" id="library-upload">⇧ Subir</button><input type="file" hidden id="library-file" accept="image/png,image/jpeg,image/webp"></div><p class="subtle-copy">Imágenes guardadas para este proyecto. Elige una escena y sube una captura para asignarla.</p><div class="library-grid" id="library-grid"></div></div>
+        </aside>
+      </section>
+
+      <section class="view script-view hidden" id="script-view">
+        <div class="page-heading"><div><h1>Guion del proyecto</h1></div></div>
+        <div class="mode-switch" aria-label="Modo de guion">
+          <button class="secondary-button active" data-script-mode="paste" aria-pressed="true">Pegar guion listo (Sin API)</button>
+          <button class="secondary-button" data-script-mode="api" aria-pressed="false">Generar con API</button>
+        </div>
+        <article class="panel media-card paste-script" id="script-paste-panel">
+          <label class="form-field"><span>Guion estructurado</span><textarea id="structured-script" class="large-textarea" rows="13" maxlength="400000" placeholder="ESCENA 1&#10;LOCUCIÓN: ¿Qué pasó aquella mañana?&#10;PROMPT VISUAL: Una calle al amanecer, plano general.&#10;&#10;ESCENA 2&#10;LOCUCIÓN: Todo empezó junto al río.&#10;PROMPT VISUAL: Un puente de piedra sobre el río."></textarea></label>
+          <div class="media-actions"><button class="primary-button" id="import-structured-script">Convertir en escenas del proyecto</button><span class="media-hint">La importación sustituye el montaje actual. Las imágenes subidas siguen en Recursos.</span></div>
+        </article>
+        <div class="hidden" id="script-api-panel">
+        <div class="script-grid">
+          <div class="panel script-compose">
+            <div class="panel-title-row"><div><h2>Generar con IA</h2><p>La solicitud sale desde tu equipo directamente al servicio seleccionado.</p></div><span class="ai-orb">✧</span></div>
+            <label class="field-label" for="script-provider">Proveedor</label><select id="script-provider" class="form-control"><option value="openai">OpenAI</option><option value="anthropic">Anthropic · Claude</option><option value="gemini">Google · Gemini</option></select>
+            <label class="field-label" for="script-model">Modelo</label><input id="script-model" class="form-control" placeholder="Ej. un modelo disponible en tu cuenta">
+            <label class="field-label" for="script-prompt">Tema o instrucciones</label><textarea id="script-prompt" class="large-textarea" rows="8">Escribe un guion en español para un video de YouTube de 90 segundos sobre una historia sorprendente. Abre con una pregunta, explica el contexto con claridad, divide la narración en párrafos cortos y termina con una invitación amable a suscribirse.</textarea>
+            <div class="script-actions"><span class="hint"><span class="green-dot"></span>La clave permanece en el almacén seguro del equipo</span><button class="primary-button" id="generate-script"><span>✧</span> Generar guion</button></div>
+          </div>
+          <div class="panel script-output-panel"><div class="panel-title-row"><div><h2>Guion generado</h2><p id="script-output-status">La respuesta aparecerá aquí.</p></div><button class="secondary-button" id="copy-script">Copiar</button></div><textarea id="script-output" class="script-output" placeholder="El borrador de tu guion aparecerá aquí…"></textarea><div class="output-footer"><span id="script-token-count">0 tokens · costo según la cuenta del proveedor</span><button class="secondary-button" id="use-script">Usar en el proyecto <span>→</span></button></div></div>
+        </div>
+        <div class="connection-banner"><div class="connection-icon">⌘</div><div><strong>¿Aún no conectaste una API?</strong><span>Guarda tu API key en Ajustes y prueba la conexión en segundos.</span></div><button class="text-button" data-view="settings">Configurar APIs <span>→</span></button></div>
+        </div>
+      </section>
+
+      <section class="view media-view hidden" id="prompts-view">
+        <div class="page-heading"><div><h1>Prompts visuales</h1><p id="prompt-style-label"></p></div><button class="primary-button" id="copy-all-prompts">Copiar todos los prompts</button></div>
+        <div class="panel prompt-list" id="project-prompts"></div>
+      </section>
+
+      <section class="view media-view hidden" id="resources-view">
+        <div class="page-heading"><div><h1>Recursos del proyecto</h1><p>Los nombres como escena_2.png tienen prioridad para su escena. El resto se asigna por nombre a escenas sin imagen.</p></div><button class="primary-button" id="auto-assign-images">Auto-asignar imágenes por orden</button></div>
+        <label class="upload-drop" id="resource-drop" for="resource-files"><strong>Arrastra tus imágenes o selecciona varios archivos</strong><span>PNG, JPG o WebP</span></label>
+        <input class="hidden" id="resource-files" type="file" accept=".png,.jpg,.jpeg,.webp" multiple>
+        <div class="production-grid" id="project-resources"></div>
+      </section>
+
+      <section class="view media-view hidden" id="scenes-view">
+        <div class="page-heading"><div><h1>Escenas del proyecto</h1><p id="scene-voice-settings"></p></div><button class="secondary-button" data-view="audio">Configurar voz</button></div>
+        <div class="production-grid" id="project-scenes"></div>
+      </section>
+
+      <section class="view media-view hidden" id="styles-view">
+        <div class="page-heading"><div><h1>Estilos visuales</h1><p>El sufijo del estilo activo se añade al copiar cada prompt.</p></div></div>
+        <div class="media-grid">
+          <div class="panel media-card"><h2>Presets guardados</h2><div id="project-styles" class="style-list"></div></div>
+          <form class="panel media-card" id="style-form"><h2>Nuevo preset</h2>
+            <label class="form-field"><span>Nombre</span><input class="form-control" name="name" maxlength="100" required placeholder="Documental oscuro cinematográfico"></label>
+            <label class="form-field"><span>Sufijo para el prompt</span><textarea class="large-textarea" name="style_prompt" rows="5" maxlength="2000" required placeholder="Iluminación tenue, contraste alto y color frío."></textarea></label>
+            <button class="primary-button" type="submit">Guardar y usar preset</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="view settings-view hidden" id="settings-view">
+        <div class="page-heading"><div><span class="eyebrow">SISTEMA · BYOK</span><h1>Conecta tus servicios</h1><p>Guarda tus propias claves y usa cada API cuando lo necesites. Ninguna clave sale de tu equipo salvo la petición directa al proveedor.</p></div><span class="secure-store-tag"><span class="green-dot"></span> ALMACÉN SEGURO DE WINDOWS</span></div>
+        <div class="settings-summary"><div class="settings-summary-icon">⌘</div><div><strong id="connected-summary">0 servicios conectados</strong><span>Prueba de lectura gratuita cuando el proveedor ofrece un endpoint seguro.</span></div><button class="text-button" id="refresh-providers">Actualizar estado&nbsp; ⟳</button></div>
+        <div class="provider-groups">
+          <div class="provider-group"><div class="group-heading"><h2>Modelos de lenguaje</h2><span>Guiones y prompts</span></div><div class="provider-grid" id="provider-group-llm"></div></div>
+          <div class="provider-group"><div class="group-heading"><h2>Voz e imágenes</h2><span>Medios generativos</span></div><div class="provider-grid" id="provider-group-media"></div></div>
+          <div class="provider-group"><div class="group-heading"><h2>Música y efectos</h2><span>Bibliotecas externas</span></div><div class="provider-grid" id="provider-group-audio"></div></div>
+        </div>
+      </section>
+
+      <section class="view review-view hidden" id="review-view">
+        <div class="page-heading"><div><span class="eyebrow">MÓDULO 8 · REVISIÓN</span><h1>El repaso</h1><p>Comenta un instante exacto del video y conserva tus ajustes en el proyecto.</p></div><span class="review-count"><strong id="review-count-number">1</strong> nota pendiente</span></div>
+        <div class="review-layout">
+          <div class="panel review-player-panel"><div class="review-player-stage"><div class="review-art-mini"><span>VISTA PREVIA LOCAL</span></div><video class="review-video hidden" id="review-video" controls></video><button class="review-play" id="review-play">▶</button><span class="review-timecode" id="review-timecode">00:00 / 00:00</span><button class="comment-this-button" id="comment-this">✎ &nbsp; Comentar este momento</button></div><div class="review-note-composer"><div class="composer-time"><span class="green-dot"></span> MARCA DE TIEMPO <strong id="composer-timestamp">00:00.00</strong><span id="composer-scene">· Escena 01</span></div><textarea id="review-note-input" rows="3" placeholder="Escribe un ajuste para este momento…"></textarea><div class="composer-footer"><span class="hint">Pausa el video y guarda el ajuste para aplicarlo luego.</span><button class="primary-button" id="save-review-note">Guardar nota</button></div></div></div>
+          <div class="panel notes-panel"><div class="panel-title-row"><div><h2>Notas de revisión</h2><p id="review-notes-subtitle">Ajustes guardados para este proyecto.</p></div><button class="secondary-button" id="apply-notes">✓ Aplicar notas</button></div><div class="review-notes-list" id="review-notes-list"></div><div class="render-note"><span class="render-note-icon">✧</span><span>Las notas quedan asociadas a la escena y su marca de tiempo.</span></div></div>
+        </div>
+      </section>
+
+      <section class="view media-view hidden" id="audio-view">
+        <div class="page-heading"><div><span class="eyebrow">MÓDULO 1 · AUDIO</span><h1>Locución y pistas</h1><p>Genera voz por escena y fija los tiempos desde la duración medida de cada archivo.</p></div><span class="secure-store-tag"><span class="green-dot"></span> EDGE-TTS GRATIS POR DEFECTO</span></div>
+        <div class="media-grid">
+          <article class="panel media-card">
+            <div class="panel-title-row"><div><h2>Voz sintética</h2><p>Las opciones de pago usan las claves guardadas en Ajustes.</p></div></div>
+            <div class="form-grid">
+              <label class="form-field"><span>Proveedor</span><select class="form-control" id="tts-provider"><option value="edge">Edge-TTS · gratis</option><option value="openai">OpenAI TTS</option><option value="elevenlabs">ElevenLabs</option><option value="cartesia">Cartesia</option><option value="gemini">Google Gemini TTS</option></select></label>
+              <label class="form-field" id="tts-voice-field"><span>Voz / ID de voz</span><input class="form-control" id="tts-voice" value="es-CO-SalomeNeural" placeholder="Edge: es-CO-SalomeNeural · APIs: ID" /></label>
+              <label class="form-field hidden" id="gemini-voice-field"><span>Voz de Gemini</span><select class="form-control" id="gemini-voice"></select></label>
+              <label class="form-field media-wide" id="tts-model-field"><span>Modelo (opcional)</span><input class="form-control" id="tts-model" placeholder="OpenAI: gpt-4o-mini-tts · ElevenLabs: eleven_multilingual_v2" /></label>
+              <label class="form-field media-wide hidden" id="gemini-tier-field"><span>Capa de Gemini para estimar el costo</span><select class="form-control" id="gemini-tts-tier"><option value="free">Gratuita</option><option value="paid">De pago</option></select></label>
+              <label class="form-field media-wide"><span>Cartesia · costo USD por 1000 caracteres según tu plan</span><input class="form-control" id="cartesia-rate" type="number" min="0" max="100" step="0.01" value="0" /></label>
+              <label class="form-field"><span>Volumen voz (dB)</span><input class="form-control" id="voice-gain" type="number" min="-60" max="12" step="1" value="0" /></label>
+            </div>
+            <div class="media-actions hidden" id="gemini-sample-panel">
+              <button class="secondary-button" id="gemini-voice-sample">Escuchar muestra</button>
+              <audio id="gemini-sample-player" controls preload="none" class="hidden" aria-label="Reproducir muestra de Gemini"></audio>
+              <span id="gemini-key-note" class="media-hint"></span>
+              <button class="secondary-button hidden" id="gemini-open-settings" data-view="settings">Ir a Ajustes</button>
+            </div>
+            <div class="media-actions"><button class="primary-button" id="generate-tts">Generar o reemplazar todas las voces</button><span class="media-hint" id="tts-cost-hint">Edge-TTS es gratuito y requiere conexión a internet.</span></div>
+            <div class="audio-summary"><span>Duración medida</span><strong id="audio-duration-label">Sin audio</strong><span>Locución</span><strong id="audio-source-label">—</strong></div>
+          </article>
+          <article class="panel media-card">
+            <div class="panel-title-row"><div><h2>Audio maestro</h2><p>Al subirlo, la app reconoce palabras localmente y sincroniza cada escena.</p></div></div>
+            <label class="upload-drop" for="master-audio-file"><strong>Subir audio maestro</strong><span>MP3, WAV, M4A, AAC, OGG o FLAC</span></label><input class="hidden" id="master-audio-file" type="file" accept="audio/*" />
+            <button class="secondary-button" id="sync-master-audio">Volver a sincronizar con faster-whisper</button>
+            <div class="job-status hidden" id="sync-job-status"></div>
+          </article>
+          <article class="panel media-card">
+            <div class="panel-title-row"><div><h2>Música de fondo</h2><p>La pista se repite hasta el final y baja cuando habla el narrador.</p></div></div>
+            <label class="upload-drop compact-drop" for="music-file"><strong id="music-file-label">Añadir música local</strong><span>MP3, WAV, M4A, AAC u OGG</span></label><input class="hidden" id="music-file" type="file" accept="audio/*" />
+            <div class="form-grid one-column"><label class="form-field"><span>Volumen música (dB)</span><input class="form-control" id="music-gain" type="number" min="-60" max="12" step="1" value="-15" /></label><label class="check-field"><input id="music-ducking" type="checkbox" checked /><span>Bajar música mientras habla la voz</span></label></div>
+          </article>
+          <article class="panel media-card">
+            <div class="panel-title-row"><div><h2>Logotipo PNG</h2><p>Superpuesto sobre la imagen con escala, opacidad y posición editables.</p></div></div>
+            <label class="upload-drop compact-drop" for="logo-file"><strong id="logo-file-label">Añadir logotipo PNG</strong><span>Recomendado: PNG transparente</span></label><input class="hidden" id="logo-file" type="file" accept="image/png" />
+            <div class="form-grid"><label class="form-field"><span>Posición</span><select class="form-control" id="logo-position"><option value="bottom_right">Abajo derecha</option><option value="bottom_left">Abajo izquierda</option><option value="top_right">Arriba derecha</option><option value="top_left">Arriba izquierda</option></select></label><label class="form-field"><span>Tamaño (fracción)</span><input class="form-control" id="logo-scale" type="number" min="0.03" max="0.5" step="0.01" value="0.14" /></label><label class="form-field"><span>Opacidad (0–1)</span><input class="form-control" id="logo-opacity" type="number" min="0.05" max="1" step="0.05" value="0.85" /></label></div>
+          </article>
+          <article class="panel media-card">
+            <div class="panel-title-row"><div><h2>Efectos de sonido</h2><p>Sube SFX locales y define el segundo de entrada.</p></div></div>
+            <div class="form-grid"><label class="form-field"><span>Archivo de audio</span><input class="form-control" id="sfx-file" type="file" accept="audio/*" /></label><label class="form-field"><span>Inicio (segundos)</span><input class="form-control" id="sfx-start" type="number" min="0" step="0.1" value="0" /></label></div>
+            <button class="secondary-button" id="upload-sfx">Añadir efecto</button><div class="sfx-list" id="sfx-list"></div>
+            <label class="form-field"><span>Volumen efectos (dB)</span><input class="form-control" id="sfx-gain" type="number" min="-60" max="12" step="1" value="0" /></label>
+          </article>
+          <article class="panel media-card cost-card">
+            <div class="panel-title-row"><div><h2>Costos estimados (USD)</h2><p>Estimación del uso registrado en este proyecto.</p></div></div>
+            <div class="cost-lines"><span>Imágenes</span><strong id="cost-images">$0.00</strong><span>Voz</span><strong id="cost-voice">$0.00</strong><span>LLM</span><strong id="cost-llm">$0.00</strong><span>Total estimado</span><strong id="cost-total">$0.00</strong></div>
+            <button class="secondary-button" id="save-audio-settings">Guardar mezcla de audio</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="view media-view hidden" id="export-view">
+        <div class="page-heading"><div><h1>Exportación MP4</h1><p>Ensambla las imágenes y pistas del proyecto en tu equipo.</p></div></div>
+        <div class="media-grid export-grid">
+          <article class="panel media-card image-generation-card">
+            <div class="panel-title-row"><div><h2>Generación de imágenes con API (opcional)</h2><p>Puedes importar tus propias imágenes desde Recursos.</p></div></div>
+            <div class="form-grid"><label class="form-field"><span>Proveedor</span><select class="form-control" id="image-provider"><option value="openai">OpenAI Images</option><option value="replicate">Replicate · Flux Schnell</option></select></label><label class="form-field"><span>Modelo</span><input class="form-control" id="image-model" value="gpt-image-2.5-flare" /></label></div>
+            <div class="media-actions"><button class="primary-button" id="generate-missing-images">Generar imágenes faltantes</button><button class="secondary-button" id="generate-all-images">Regenerar todas</button></div>
+            <div class="job-status hidden" id="image-job-status"></div>
+            <p class="media-hint">Regenera una escena desde su inspector con una instrucción de corrección. Las imágenes subidas a mano se conservan.</p>
+          </article>
+          <article class="panel media-card">
+            <div class="panel-title-row"><div><h2>Formato y calidad</h2><p>La exportación conserva la duración acumulada de las escenas.</p></div></div>
+            <label class="form-field"><span>Relación de aspecto</span><select class="form-control" id="render-aspect"><option value="16:9">16:9 · YouTube horizontal</option><option value="9:16">9:16 · Shorts vertical</option></select></label>
+            <label class="form-field"><span>Subtítulos</span><select class="form-control" id="subtitle-mode"><option value="none">Sin subtítulos</option><option value="srt">Archivo .srt descargable</option><option value="burn">Integrados en el video</option></select></label>
+            <button class="primary-button render-button" id="render-video">Exportar MP4 1080p</button>
+            <div class="job-status hidden" id="render-job-status"></div>
+            <div class="export-result hidden" id="export-result"><video id="export-video" controls></video><a id="download-video" class="secondary-button" download>Descargar MP4</a><a id="download-srt" class="secondary-button hidden" download>Descargar subtítulos .srt</a></div>
+            <p class="media-hint" id="last-export-label">No hay una exportación reciente.</p>
+          </article>
+          <article class="panel media-card cost-card">
+            <div class="panel-title-row"><div><h2>Conteo del proyecto</h2><p>Las tarifas son estimaciones; cada proveedor factura en su cuenta.</p></div></div>
+            <div class="cost-lines"><span>Tokens LLM</span><strong id="export-llm-tokens">0 tok</strong><span>Imágenes</span><strong id="export-image-count">0</strong><span>Voz</span><strong id="export-voice-cost">$0.00</strong><span>Total USD</span><strong id="export-total-cost">$0.00</strong></div>
+            <small class="media-hint">OpenAI y Anthropic se estiman por tokens/modelo; ElevenLabs por caracteres; Edge-TTS es gratuito. Replicate usa precio publicado de Flux Schnell. Cartesia requiere ajustar el costo de créditos de tu plan.</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="view media-view hidden" id="workspace-view">
+        <div class="page-heading"><h1 id="workspace-title">Proyecto local</h1></div>
+        <div class="panel media-card" id="workspace-content"></div>
+        <div class="media-actions"><button class="secondary-button" data-view="script">Abrir guion</button><button class="secondary-button" data-view="timeline">Abrir línea de tiempo</button></div>
+      </section>
+
+      <div class="job-status floating-job hidden" id="audio-job-status" role="status" aria-live="polite"></div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+</body>
+</html>
